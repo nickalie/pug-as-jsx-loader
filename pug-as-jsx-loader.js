@@ -97,8 +97,8 @@ module.exports = function (jsxHelper, { pug, loaderUtils }) {
         const [, indent,,, condition] = current.match(pattern);
         return {
           startBlock: `${indent}| {(${condition
-          .replace(/</g, LESS_THAN)
-          .replace(/>/g, GREATER_THAN)}) && (`,
+            .replace(/</g, LESS_THAN)
+            .replace(/>/g, GREATER_THAN)}) && (`,
           replacement: current.replace(pattern, '$1$2').replace(/\(\s*,\s*/, '('),
           endBlock: `${indent}| )}`,
         };
@@ -111,8 +111,8 @@ module.exports = function (jsxHelper, { pug, loaderUtils }) {
         const [, indent,,, condition] = current.match(pattern);
         return {
           startBlock: `${indent}| {!(${condition
-          .replace(/</g, LESS_THAN)
-          .replace(/>/g, GREATER_THAN)}) && (`,
+            .replace(/</g, LESS_THAN)
+            .replace(/>/g, GREATER_THAN)}) && (`,
           replacement: current.replace(pattern, '$1$2').replace(/\(\s*,\s*/, '('),
           endBlock: `${indent}| )}`,
         };
@@ -142,7 +142,7 @@ module.exports = function (jsxHelper, { pug, loaderUtils }) {
         const from = src.replace(/^(.[a-zA-Z0-9]+)$/, `${files.name}$1`);
         store.importCss = [
           ...(store.importCss || []),
-        { name, from },
+          { name, from },
         ];
         store.ignoreVars = [
           ...(store.ignoreVars || []),
@@ -187,19 +187,19 @@ module.exports = function (jsxHelper, { pug, loaderUtils }) {
   const indentScript = (jsx) => {
     let indent = '';
     return jsx.replace(/\n/g, ' ').replace(/\s+/g, ' ')
-    .replace(/".*?"/g, '""').replace(/'.*?'/g, "''")
-    .replace(/^[^{]+/, '')
-    .replace(/([{}])/g, (whole, p1) => {
-      let replaced = '';
-      if (p1 === '{') {
-        indent += '  ';
-        replaced = indent.substr(2) + p1;
-      } else {
-        replaced = indent.substr(2) + p1;
-        indent = indent.split('').slice(2).join('');
-      }
-      return `\n${replaced}`;
-    });
+      .replace(/".*?"/g, '""').replace(/'.*?'/g, "''")
+      .replace(/^[^{]+/, '')
+      .replace(/([{}])/g, (whole, p1) => {
+        let replaced = '';
+        if (p1 === '{') {
+          indent += '  ';
+          replaced = indent.substr(2) + p1;
+        } else {
+          replaced = indent.substr(2) + p1;
+          indent = indent.split('').slice(2).join('');
+        }
+        return `\n${replaced}`;
+      });
   };
 
   const extractVariables = (jsx) => {
@@ -313,7 +313,7 @@ module.exports = function (jsxHelper, { pug, loaderUtils }) {
     if (relativePath.search(/^\./) === -1) {
       relativePath = `./${relativePath}`;
     }
-  // path명의 마지막이 컴포넌트명이 다른 경우, 개별 파일로 직접 연결되는 케이스
+    // path명의 마지막이 컴포넌트명이 다른 경우, 개별 파일로 직접 연결되는 케이스
     if (component && relativePath.split('/').pop() !== component) {
       relativePath = `${relativePath}/${component}`.replace(/[/]+/g, '/');
     }
@@ -321,58 +321,58 @@ module.exports = function (jsxHelper, { pug, loaderUtils }) {
   };
 
   const getUsageExample = (components, variables, files, rootPath) =>
-  new Promise((resolve) => {
-    const promise = rootPath ? findComponents(rootPath) : Promise.resolve({});
+    new Promise((resolve) => {
+      const promise = rootPath ? findComponents(rootPath) : Promise.resolve({});
 
-    promise.then((foundComponents) => {
-      const example = [];
-      example.push('/* USAGE EXAMPLE */');
-      if (components.length > 0) {
-        example.push('// Components');
-        components.forEach((component) => {
-          if (foundComponents[component]) {
-            foundComponents[component].forEach((each, i) => {
-              example.push(`${i > 0 ? '// ' : ''}import ${component} from '${getRelativePath(files.path, each, component)}'`);
-            });
-          } else {
-            example.push(`import ${component} from '__modulePath__/${component}';`);
-          }
-        });
-        example.push('');
-      }
-      example.push('// jsx');
-      example.push(`import template from '${files.pug}';`);
-      example.push('');
-      example.push('class Report extends React.Component {');
-      example.push('');
-      example.push('  render() {');
-      if (variables.length > 0) {
-        example.push('    const {');
-        example.push(`      ${variables.join(',\n//        ')},`);
-        example.push('    } = this;');
-      }
-      example.push('');
-      if (variables.length === 0 && components.length === 0) {
-        example.push('    return template.call(this);');
-      } else {
-        example.push('    return template.call(this, {');
-        if (variables.length > 0) {
-          example.push('      // variables');
-          example.push(`      ${variables.join(',\n//        ')}${components.length > 0 ? ',' : ''}`);
-        }
+      promise.then((foundComponents) => {
+        const example = [];
+        example.push('/* USAGE EXAMPLE */');
         if (components.length > 0) {
-          example.push('      // components');
-          example.push(`      ${components.join(',\n//        ')},`);
+          example.push('// Components');
+          components.forEach((component) => {
+            if (foundComponents[component]) {
+              foundComponents[component].forEach((each, i) => {
+                example.push(`${i > 0 ? '// ' : ''}import ${component} from '${getRelativePath(files.path, each, component)}'`);
+              });
+            } else {
+              example.push(`import ${component} from '__modulePath__/${component}';`);
+            }
+          });
+          example.push('');
         }
-        example.push('    });');
-      }
-      example.push('  }');
-      example.push('');
-      example.push('}');
-      example.push('/* // USAGE EXAMPLE */');
-      resolve(`//  ${example.join('\n//  ')}`.replace(/\s+\n/g, '\n'));
+        example.push('// jsx');
+        example.push(`import template from '${files.pug}';`);
+        example.push('');
+        example.push('class Report extends React.Component {');
+        example.push('');
+        example.push('  render() {');
+        if (variables.length > 0) {
+          example.push('    const {');
+          example.push(`      ${variables.join(',\n//        ')},`);
+          example.push('    } = this;');
+        }
+        example.push('');
+        if (variables.length === 0 && components.length === 0) {
+          example.push('    return template.call(this);');
+        } else {
+          example.push('    return template.call(this, {');
+          if (variables.length > 0) {
+            example.push('      // variables');
+            example.push(`      ${variables.join(',\n//        ')}${components.length > 0 ? ',' : ''}`);
+          }
+          if (components.length > 0) {
+            example.push('      // components');
+            example.push(`      ${components.join(',\n//        ')},`);
+          }
+          example.push('    });');
+        }
+        example.push('  }');
+        example.push('');
+        example.push('}');
+        example.push('/* // USAGE EXAMPLE */');
+        resolve(`//  ${example.join('\n//  ')}`.replace(/\s+\n/g, '\n'));
+      });
     });
-  });
 
   const updateJSX = (source, useMacro, store, files, rootPath, isJsFile, options = {}) => {
     if (isJsFile) {
@@ -459,7 +459,7 @@ module.exports = function (jsxHelper, { pug, loaderUtils }) {
           '\n',
           exportsFn,
           '  return (',
-        // source,
+          // source,
           jsxHelper.beautify(source, {
             indent: 4,
             maxLineLength: MAX_LINE_LENGTH,
@@ -505,12 +505,12 @@ module.exports = function (jsxHelper, { pug, loaderUtils }) {
           resolve('');
           return;
         }
-      // remove comment, remove string names
+        // remove comment, remove string names
         const refined = data.replace(/\/\*[\s\S]+?\*\//g, '')
-        .replace(/\/\/.*/gm, '')
-        .replace(/".*"/g, '"..."')
-        .replace(/'.*'/g, "'...'")
-        .match(/\.[a-zA-Z_][a-zA-Z0-9_-]*/g) || [];
+          .replace(/\/\/.*/gm, '')
+          .replace(/".*"/g, '"..."')
+          .replace(/'.*'/g, "'...'")
+          .match(/\.[a-zA-Z_][a-zA-Z0-9_-]*/g) || [];
 
         refined.reduce((dict, curr) => {
           const replaced = curr.replace(/^\./, '');
@@ -730,13 +730,13 @@ module.exports = function (jsxHelper, { pug, loaderUtils }) {
       updateJSX(replaced, useMacro, store, files, root, isJsFile, options),
       isJsFile ? Promise.resolve() : updateCssClass(replaced, files),
     ])
-    .then(
-      (result) => {
-        callback(null, result[0]);
-      })
-    .catch(
-      (reason) => {
-        callback(reason);
-      });
+      .then(
+        (result) => {
+          callback(null, result[0]);
+        })
+      .catch(
+        (reason) => {
+          callback(reason);
+        });
   };
 };
