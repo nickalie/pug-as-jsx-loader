@@ -442,16 +442,16 @@ module.exports = function (jsxHelper, { pug, loaderUtils }) {
         const importCss = store.importCss || [];
         let exportsFn;
         if (refs.length > 0) {
-          exportsFn = `export default function (params = {}) {\n  const { ${refs.join(', ')} } = params;`;
+          exportsFn = `module.exports = function (params = {}) {\n  const { ${refs.join(', ')} } = params;`;
           if (exportsFn.length > MAX_LINE_LENGTH) {
-            exportsFn = `export default function (params = {}) {\n  const {\n    ${refs.join(',\n    ')},\n  } = params;`;
+            exportsFn = `module.exports = function (params = {}) {\n  const {\n    ${refs.join(',\n    ')},\n  } = params;`;
           }
         } else {
-          exportsFn = 'export default function () {';
+          exportsFn = 'module.exports = function () {';
         }
         // eslint-disable-next-line prefer-template
         const jsxOutput = `${[
-          "import React from 'react';",
+          "const m = require('mithrill');",
           useMacro ? IMPORT_MACRO : '',
           ...importComponents.map(({ name, from }) => `import ${name} from '${from}';`),
           ...importVariables.map(({ name, from }) => `import ${name} from '${from}';`),
